@@ -27,6 +27,8 @@ class ContactControllerFactory implements FactoryInterface
     {
         $parentLocator = $serviceLocator->getServiceLocator();
 
-        return new ContactController();
+        $contactTable = $parentLocator->get('contact_table');
+
+        return new ContactController($contactTable);
     }
 }

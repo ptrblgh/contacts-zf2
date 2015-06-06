@@ -38,9 +38,7 @@ class ContactTable extends AbstractTableGateway
      */
     public function __construct(
         Adapter $dbAdapter, 
-        HydratingResultSet $resultSetPrototype,
-        FeatureSet $featureSet,
-        Translator $translator
+        HydratingResultSet $resultSetPrototype
     ) {
         $this->adapter = $dbAdapter;
         $this->resultSetPrototype = $resultSetPrototype;

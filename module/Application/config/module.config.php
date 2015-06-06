@@ -23,6 +23,10 @@ return array(
         ),
     ),
     'service_manager' => array(
+        'factories' => array(
+            'contact_table'
+                => 'Application\Factory\ContactTableFactory',
+        ),        
         'aliases' => array(
             'translator' => 'MvcTranslator',
         ),

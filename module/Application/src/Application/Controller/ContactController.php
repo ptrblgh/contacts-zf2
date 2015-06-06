@@ -10,20 +10,27 @@ namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Application\Model\ContactTable;
 
 /**
  * Controller for contact actions
- * 
+ *
  * {@inheritDoc}
  */
 class ContactController extends AbstractActionController
 {
     /**
-     * Controller constructor
-     * 
+     * @var ContactTable
      */
-    public function __construct() {
+    protected $contactTable;
 
+    /**
+     * Controller constructor
+     *
+     * @param ContactTable $contactTable
+     */
+    public function __construct(ContactTable $contactTable) {
+        $this->contactTable = $contactTable;
     }
 
     /**
