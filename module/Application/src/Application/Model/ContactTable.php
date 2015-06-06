@@ -54,10 +54,11 @@ class ContactTable extends AbstractTableGateway
      */
     public function fetchAll()
     {
-        $sql = new Sql($this->adapter);
-        $select = $sql->select();
         $expression = 'IFNULL(GROUP_CONCAT(category.category_name ORDER BY '
             . 'category.category_name ASC SEPARATOR \', \'), \'Besorolatlan\')';
+
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
         $rows = $select
             ->columns(
                 array(
