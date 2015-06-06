@@ -20,8 +20,8 @@
             <td><?php echo $this->escapeHtml($contact->contact_add_date);?></td>
             <td class="col-other">
                 <div class="btn-group" action="group" aria-label="...">
-                    <a href="<?php echo $this->url('contact', array('action' => 'edit', 'id' => $contact->id)); ?>" action="button" class="btn btn-default btn-sm"><span class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></span></a>
-                    <a href="<?php echo $this->url('contact', array('contact' => 'del', 'id' => $contact->id)); ?>" action="button" class="btn btn-default btn-sm confirm-del"><span class="fa fa-trash-o fa-lg"></span></a>
+                    <a href="<?php echo $this->url('contact', array('action' => 'edit', 'id' => $contact->contact_id)); ?>" action="button" class="btn btn-default btn-sm"><span class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></span></a>
+                    <a href="<?php echo $this->url('contact', array('action' => 'del', 'id' => $contact->contact_id)); ?>" action="button" class="btn btn-default btn-sm confirm-del"><span class="fa fa-trash-o fa-lg"></span></a>
                 </div>
             </td>
         </tr>
