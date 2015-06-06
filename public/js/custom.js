@@ -9,21 +9,21 @@ $(document).ready( function() {
 
             return $(this).find('.additional-data').html();
         },
-        title: _('Additional information')
+        title: 'Additional information'
     });
     
     // bootstrap enchanced confrimation
     $('.confirm-del').confirmation({
-        title: _('Biztos vagy benne?'),
+        title: 'Biztos vagy benne?',
         href: $(this).attr('href'),
-        btnOkLabel: _('Igen'),
-        btnCancelLabel: _('Nem'),
+        btnOkLabel: 'Igen',
+        btnCancelLabel: 'Nem',
         container: 'body'
     });
 
     // select2
     $('.select2').select2({
-        placeholder: _("Click here (and start typing)"),
+        placeholder: "Kattints ide (és kezdj el gépelni)",
         language: "all",
     });
 });
