@@ -7,7 +7,7 @@ return array(
                 'type' => 'segment',
                 'options' => array(
                     'route' 
-                        => '/[/:action][/:id][/order_by/:order_by][/:order]',
+                        => '/[:action][/:id][/order_by/:order_by][/:order]',
                     'constraints' => array(
                         'action' => '(?!\border_by\b)[a-zA-Z][a-zA-Z-]*',
                         'id' => '[0-9]+',
@@ -40,7 +40,7 @@ return array(
     'controllers' => array(
         'factories' => array(
             'contact_controller' 
-                => 'ZeusUser\Factory\ContactControllerFactory',
+                => 'Application\Factory\ContactControllerFactory',
         ),
     ),
     'view_manager' => array(

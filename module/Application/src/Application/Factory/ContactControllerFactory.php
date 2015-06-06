@@ -10,7 +10,7 @@ namespace Application\Factory;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Application\Controller\AdminActionController;
+use Application\Controller\ContactController;
 
 /**
  * Factory for instantiating {@see Application\Controller\ContactActionController}
