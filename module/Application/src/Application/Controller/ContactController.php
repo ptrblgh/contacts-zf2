@@ -40,6 +40,8 @@ class ContactController extends AbstractActionController
      */
     public function listAction()
     {
-        return array();
+        $contacts = $this->contactTable->fetchAll();
+
+        return array('contacts' => $contacts);
     }
 }

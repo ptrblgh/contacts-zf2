@@ -13,6 +13,7 @@ use Zend\Db\TableGateway\Feature\FeatureSet;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\ResultSet\HydratingResultSet;
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
@@ -47,14 +48,51 @@ class ContactTable extends AbstractTableGateway
     }
 
     /**
-     * Retrive all contacts
+     * Retrive all contacts with categories
      * 
      * @return ResultSet
      */
     public function fetchAll()
     {
-        $rows = $this->select();
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $expression = 'IFNULL(GROUP_CONCAT(category.category_name ORDER BY '
+            . 'category.category_name ASC SEPARATOR \', \'), \'Besorolatlan\')';
+        $rows = $select
+            ->columns(
+                array(
+                    'contact_id' => 'id',
+                    'contact_name' => 'contact_name',
+                    'contact_email' => 'contact_email',
+                    'contact_cell' => 'contact_cell',
+                    'contact_add_date' => 'contact_add_date',
+                    'contact_categories' => new Expression($expression)
+                )
+            )
+            ->from($this->table)
+            // join contact-category table to get categories' id for contacts
+            ->join(
+                array('contact_category' => 'contact_category'), 
+                'contact_category.contact_id = contact.id',
+                array(),
+                Select::JOIN_LEFT
+            )
+            // join category table to get category names for contacts
+            ->join(
+                array('category' => 'category'), 
+                'category.id = contact_category.category_id',
+                array('category_name' => 'category_name'),
+                Select::JOIN_LEFT
+            )
+            ->group('contact.id')
+        ;
+        // \Zend\Debug\Debug::dump($sql->getSqlStringForSqlObject($select));
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
 
-        return $rows;
+        $resultSet = new ResultSet;
+        $resultSet->initialize($result);
+
+        return $resultSet;
     }
 }
