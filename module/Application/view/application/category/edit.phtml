@@ -2,9 +2,9 @@
 $form = $this->form;
 $form->prepare();
 $form->get('add')->setLabel('Változások mentése');
-$form->setAttribute('action', $this->url('contact', array('action' => 'edit', 'id' => $this->id)));
+$form->setAttribute('action', $this->url('category', array('action' => 'edit', 'id' => $this->id)));
 $form->setAttribute('method', 'post');
-$form->setAttribute('id', 'contact-edit');
+$form->setAttribute('id', 'category-edit');
 $form->setAttribute('class', 'clearfix');
 $form->setAttribute('role', 'form');
 $formLabel = $this->plugin('formLabel');
@@ -20,10 +20,10 @@ $formLabelAttributes = array('class' => 'control-label full-width');
     ?>
     <div class="form-group col-sm-offset-3 col-sm-6">
         <?php
-        $contact_name = $form->get('contact_name');
-        echo $formLabel($contact_name);
-        echo $this->formInput($contact_name);
-        echo $this->formElementErrors($contact_name);
+        $category_name = $form->get('category_name');
+        echo $formLabel($category_name);
+        echo $this->formInput($category_name);
+        echo $this->formElementErrors($category_name);
         ?>
     </div>
     <?php echo $this->formInput($form->get('security')) ?>
