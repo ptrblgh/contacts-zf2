@@ -1,22 +1,26 @@
 <?php
 
 return array(
+    'items_per_page' => 1,
     'router' => array(
         'routes' => array(
             'contact' => array(
                 'type' => 'segment',
                 'options' => array(
                     'route' 
-                        => '/[:action][/:id][/order_by/:order_by][/:order]',
+                        => '/[contacts][/:action][/:id][/page/:page]'
+                            . '[/order_by/:order_by][/:order]',
                     'constraints' => array(
-                        'action' => '(?!\border_by\b)[a-zA-Z][a-zA-Z-]*',
+                        'action' => '(?!\bpage\b)(?!\border_by\b)'
+                            . '[a-zA-Z][a-zA-Z-]*',
                         'id' => '[0-9]+',
+                        'page' => '[0-9]+',
                         'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'order' => 'ASC|DESC'
                     ),
                     'defaults' => array(
                         'controller' => 'contact_controller',
-                        'action'     => 'list',
+                        'action' => 'list'
                     ),
                 ),
             ),
@@ -57,6 +61,7 @@ return array(
         'exception_template'       => 'error/index',
         'template_map' => array(
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
+            'partial/paginator'       => __DIR__ . '/../view/partial/paginator.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',

@@ -1,17 +1,42 @@
-<h1 class="page-header text-center"><?php echo $this->escapeHtml('Címek'); ?></h1>
+<?php
+
+$url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+?>
+<h1 class="page-header text-center"><?php echo $this->escapeHtml('Címlista'); ?></h1>
 
 <div class="table-responsive">
 <table class="table table-striped">
     <tr>
-        <th><?php echo $this->translate('Név'); ?></th>
-        <th><?php echo $this->translate('E-mail'); ?></th>
-        <th><?php echo $this->translate('Telefon'); ?></th>
-        <th><?php echo $this->translate('Kategória'); ?></th>
-        <th><?php echo $this->translate('Felvéve'); ?></th>
+        <th>
+            <a href="<?php echo $this->url('contact', array('order_by' => 'contact_name', 'order' => $url_order)); ?>"><?php echo $this->translate('Név'); ?> 
+                <?php if ($order_by == 'contact_name'): ?><small class="pull-right"><span class="glyphicon glyphicon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></span></small><?php endif; ?>
+            </a>
+        </th>
+        <th>
+            <a href="<?php echo $this->url('contact', array('order_by' => 'contact_email', 'order' => $url_order)); ?>"><?php echo $this->translate('E-mail'); ?> 
+                <?php if ($order_by == 'contact_email'): ?><small class="pull-right"><span class="glyphicon glyphicon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></span></small><?php endif; ?>
+            </a>
+        </th>        
+        <th>
+            <a href="<?php echo $this->url('contact', array('order_by' => 'contact_cell', 'order' => $url_order)); ?>"><?php echo $this->translate('Telefon'); ?> 
+                <?php if ($order_by == 'contact_cell'): ?><small class="pull-right"><span class="glyphicon glyphicon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></span></small><?php endif; ?>
+            </a>
+        </th> 
+        <th>
+            <a href="<?php echo $this->url('contact', array('order_by' => 'contact_categories', 'order' => $url_order)); ?>"><?php echo $this->translate('Kategória'); ?> 
+                <?php if ($order_by == 'contact_categories'): ?><small class="pull-right"><span class="glyphicon glyphicon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></span></small><?php endif; ?>
+            </a>
+        </th> 
+        <th>
+            <a href="<?php echo $this->url('contact', array('order_by' => 'contact_add_date', 'order' => $url_order)); ?>"><?php echo $this->translate('Felvéve'); ?> 
+                <?php if ($order_by == 'contact_add_date'): ?><small class="pull-right"><span class="glyphicon glyphicon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></span></small><?php endif; ?>
+            </a>
+        </th> 
         <th><?php echo $this->translate('Művelet'); ?></th>
     </tr>
-    <?php if (!empty($contacts)) : ?>
-    <?php foreach ($contacts as $contact) : ?>
+    <?php if (!empty($paginator)) : ?>
+    <?php foreach ($paginator as $contact) : ?>
         <tr>
             <td><strong><?php echo $this->escapeHtml($contact->contact_name);?></strong></td>
             <td><?php echo $this->escapeHtml($contact->contact_email);?></strong></td>
@@ -33,3 +58,5 @@
     <?php endif; ?>
 </table>
 </div>
+
+<?php echo $this->paginationControl($paginator, 'sliding', 'partial/paginator', array('order_by' => $order_by, 'order' => $order)); ?>

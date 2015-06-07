@@ -9,6 +9,8 @@
 namespace Application\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Paginator\Paginator;
+use Zend\Paginator\Adapter\Iterator as paginatorIterator;
 use Zend\View\Model\ViewModel;
 use Application\Model\Contact;
 use Application\Form\ContactForm;
@@ -22,6 +24,11 @@ use Application\Model\ContactTable;
  */
 class ContactController extends AbstractActionController
 {
+    /**
+     * @var array
+     */
+    protected $appConfig;
+
     /**
      * @var ContactTable
      */
@@ -39,10 +46,12 @@ class ContactController extends AbstractActionController
      */
     public function __construct(
         ContactTable $contactTable,
-        ContactInputFilter $contactInputFilter
+        ContactInputFilter $contactInputFilter,
+        $appConfig
     ) {
         $this->contactTable = $contactTable;
         $this->contactInputFilter = $contactInputFilter;
+        $this->appConfig = $appConfig;
     }
 
     /**
@@ -52,9 +61,34 @@ class ContactController extends AbstractActionController
      */
     public function listAction()
     {
-        $contacts = $this->contactTable->fetchAll();
+        $order_by = $this->params()->fromRoute('order_by', 'contact_name');
+        $order = $this->params()->fromRoute('order', 'ASC');
 
-        return array('contacts' => $contacts);
+        $page = $this->params()->fromRoute('page') 
+            ? (int) $this->params()->fromRoute('page') 
+            : 1
+        ;
+
+        $params = array(
+            'order_by' => $order_by, 
+            'order' => $order
+        );
+
+        $contacts = $this->contactTable->fetchAll($params);
+
+        $itemsPerPage = $this->appConfig['items_per_page'];
+
+        $contacts->current();
+        $paginator = new Paginator(new paginatorIterator($contacts));
+        $paginator->setCurrentPageNumber($page)
+            ->setItemCountPerPage($itemsPerPage)
+            ->setPageRange(5);
+
+        return array(
+            'order_by' => $order_by,
+            'order' => $order,
+            'paginator' => $paginator
+        );
     }
 
     /**

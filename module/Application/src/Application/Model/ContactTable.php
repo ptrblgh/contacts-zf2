@@ -50,9 +50,10 @@ class ContactTable extends AbstractTableGateway
     /**
      * Retrive all contacts with categories
      * 
+     * @param array $params
      * @return ResultSet
      */
-    public function fetchAll()
+    public function fetchAll($params)
     {
         $expression = 'IFNULL(GROUP_CONCAT(category.category_name ORDER BY '
             . 'category.category_name ASC SEPARATOR \', \'), \'Besorolatlan\')';
@@ -87,12 +88,21 @@ class ContactTable extends AbstractTableGateway
             )
             ->group('contact.id')
         ;
+        if (is_array($params) 
+            && !empty($params['order_by'])
+            && !empty($params['order'])
+        ) {
+            $rows->order($params['order_by'] . ' ' . $params['order']);
+        }
+
         // \Zend\Debug\Debug::dump($sql->getSqlStringForSqlObject($select));
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
 
         $resultSet = new ResultSet;
         $resultSet->initialize($result);
+
+        $resultSet->buffer();
 
         return $resultSet;
     }
