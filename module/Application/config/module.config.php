@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'items_per_page' => 1,
+    'items_per_page' => 2,
     'router' => array(
         'routes' => array(
             'contact' => array(

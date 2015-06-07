@@ -65,6 +65,7 @@ class CategoryTable extends AbstractTableGateway
                 )
             )
             ->from($this->table)
+            ->where('id != 1')
         ;
         if (is_array($params) 
             && !empty($params['order_by'])
@@ -82,7 +83,12 @@ class CategoryTable extends AbstractTableGateway
 
         $resultSet->buffer();
 
-        return $resultSet;
+        $rowsForSelect = array();
+        foreach ($resultSet as $row) {
+            $rowsForSelect[$row->category_id] = $row->category_name;
+        }
+
+        return ($params['forSelect']) ? $rowsForSelect : $resultSet;
     }
 
     /**
@@ -113,7 +119,7 @@ class CategoryTable extends AbstractTableGateway
     /**
      * Get category
      * 
-     * @param int $categoryId
+     * @param int $id
      * @throws \Exception if category doesn't exist
      * @return ResultSet
      */
@@ -121,12 +127,14 @@ class CategoryTable extends AbstractTableGateway
     {
         $id = (int) $id;
 
-        $category = $this->select(array('id' => $id));
-        if (!$category) {
+        // Do not get 'Besorolatlan' category
+        $category = $this->select(function (Select $select) use ($id) {
+            $select->where('id = ' . $id . ' AND id != 1');
+        });
+        if ($category->count() == 0) {
             $msg = "A kategória nem létezik.";
             throw new \Exception($msg);
         }
-
         return $category->current();
     }
 
@@ -138,6 +146,74 @@ class CategoryTable extends AbstractTableGateway
      */
     public function deleteCategory($id)
     {
-        $this->delete(array('id' => (int) $id));
+        // do not delete 'Besorolatlan' category
+        if ((int) $id !==  1) {
+            $this->delete(array('id' => (int) $id));
+
+            // delete bridge table entries too
+            $sql = new Sql($this->adapter);
+            $delete = $sql
+                ->delete('contact_category')
+                ->where('category_id = ' . $id);
+
+            $statement = $sql->prepareStatementForSqlObject($delete);
+            $result = $statement->execute();
+        }
     }
+
+    /**
+     * Delete category-contact pairs from bridge table by contact id
+     * 
+     * @param int $contactId
+     * @return void
+     */
+    public function deleteContactCategories($contactId)
+    {
+        $contactId = (int) $contactId;
+        $sql = new Sql($this->adapter);
+        $delete = $sql
+            ->delete('contact_category')
+            ->where('contact_id = ' . $contactId);
+
+        $statement = $sql->prepareStatementForSqlObject($delete);
+        $result = $statement->execute();
+    }
+
+    /**
+     * Find categories by contact id
+     * 
+     * @param int $contactId
+     * @param boolean $forSelect (optional)
+     * @return ResultSet|array
+     */
+    public function findCategoriesByContact($contactId, $forSelect = true)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();        
+        $rows = $select
+            ->columns(array('category_id' => 'id'))
+            ->from($this->table)
+            ->join(
+                array('contact_category' => 'contact_category'), 
+                'contact_category.category_id = category.id',
+                array(),
+                Select::JOIN_LEFT
+            )
+            ->where(array('contact_category.contact_id' => $contactId))
+            ->order('category_id ASC');
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+
+        $resultSet = new ResultSet;
+        $resultSet->initialize($result);
+
+        $valuesForSelect = array();
+        foreach ($resultSet as $row) {
+            $valuesForSelect[] = $row->category_id;
+        }
+
+        return ($forSelect) ? $valuesForSelect : $rows;
+    }
+
 }

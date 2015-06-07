@@ -27,7 +27,7 @@ $(document).ready( function() {
         language: "all",
     });
 
-    // contact add validation
+    // contact add, edit validation
     $('#contact-add, #contact-edit')
         .on('init.field.fv', function(e, data) {
             var $icon      = data.element.data('fv.icon'),
@@ -78,7 +78,7 @@ $(document).ready( function() {
                 contact_cell: {
                     validators: {
                         regexp: {
-                            regexp: /^(36)(20|30|31|70){1}([1-9]{1})([0-9]{6})$/
+                            regexp: /^(36)(20|30|31|70){1}([1-9]{1})([0-9]{6}\s)$/
                         }
                     }
                 },
@@ -91,12 +91,47 @@ $(document).ready( function() {
                             callback: function(value, validator, $field) {
                                 // Get the selected options
                                 var options = validator
-                                    .getFieldElements('categories')
+                                    .getFieldElements('categories[]')
                                     .val();
-                                console.log('asd');
                                 return (options != null && options.length >= 1);
                             }
                         }
+                    }
+                },
+            }
+        })
+    ;
+
+    // category add, edit validation
+    $('#category-add, #category-edit')
+        .on('init.field.fv', function(e, data) {
+            var $icon      = data.element.data('fv.icon'),
+                options    = data.fv.getOptions(),
+                validators = data.fv.getOptions(data.field).validators; 
+
+            if (validators.notEmpty && options.icon && options.icon.required) {
+                $icon.addClass(options.icon.required).show();
+            }
+        })
+        .formValidation({
+            excluded: ':disabled',
+            framework: 'bootstrap',
+            icon: {
+                required: 'glyphicon glyphicon-asterisk',
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            locale: 'hu_HU',
+            fields: {
+                category_name: {
+                    validators: {
+                        notEmpty: {
+                        },
+                        stringLength: {
+                            min: 3,
+                            max: 100
+                        },
                     }
                 },
             }

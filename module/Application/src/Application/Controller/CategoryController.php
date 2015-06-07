@@ -12,10 +12,11 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Paginator\Paginator;
 use Zend\Paginator\Adapter\Iterator as paginatorIterator;
 use Zend\View\Model\ViewModel;
-use Application\Model\Category;
 use Application\Form\CategoryForm;
 use Application\Form\Filter\CategoryInputFilter;
+use Application\Model\Category;
 use Application\Model\CategoryTable;
+use Application\Model\ContactTable;
 
 /**
  * Controller for category actions
@@ -24,11 +25,6 @@ use Application\Model\CategoryTable;
  */
 class CategoryController extends AbstractActionController
 {
-    /**
-     * @var array
-     */
-    protected $appConfig;
-
     /**
      * @var CategoryTable
      */
@@ -40,6 +36,16 @@ class CategoryController extends AbstractActionController
     protected $categoryInputFilter;
 
     /**
+     * @var array
+     */
+    protected $appConfig;
+
+    /**
+     * @var ContactTable
+     */
+    protected $contactTable;
+
+    /**
      * Controller constructor
      *
      * @param CategoryTable $categoryTable
@@ -47,11 +53,13 @@ class CategoryController extends AbstractActionController
     public function __construct(
         CategoryTable $categoryTable,
         CategoryInputFilter $categoryInputFilter,
-        $appConfig
+        $appConfig,
+        ContactTable $contactTable
     ) {
         $this->categoryTable = $categoryTable;
         $this->categoryInputFilter = $categoryInputFilter;
         $this->appConfig = $appConfig;
+        $this->contactTable = $contactTable;
     }
 
     /**
@@ -71,14 +79,14 @@ class CategoryController extends AbstractActionController
 
         $params = array(
             'order_by' => $order_by, 
-            'order' => $order
+            'order' => $order,
+            'forSelect' => false
         );
 
         $categories = $this->categoryTable->fetchAll($params);
 
         $itemsPerPage = $this->appConfig['items_per_page'];
 
-        $categories->current();
         $paginator = new Paginator(new paginatorIterator($categories));
         $paginator->setCurrentPageNumber($page)
             ->setItemCountPerPage($itemsPerPage)
@@ -131,7 +139,8 @@ class CategoryController extends AbstractActionController
         try {
             $category = $this->categoryTable->getCategory($id);
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            
+            $this->redirect()->toRoute('category');
         }
 
         $form = new CategoryForm();
@@ -164,13 +173,7 @@ class CategoryController extends AbstractActionController
     {
         $id = (int) $this->params()->fromRoute('id', 0);
         $this->categoryTable->deleteCategory($id);
-
-        // TODO: remove all records from contact_category table whose
-        // category_id match with this one and if contacts left no
-        // category add them to category id #1
-
-        // TODO: put those contacts to category id #1 whose were in
-        // this one
+        $this->contactTable->saveUncategorizedContacts();
 
         $this->redirect()->toRoute('category');
     }

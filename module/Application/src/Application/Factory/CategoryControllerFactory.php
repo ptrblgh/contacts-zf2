@@ -30,11 +30,13 @@ class CategoryControllerFactory implements FactoryInterface
         $categoryTable = $parentLocator->get('category_table');
         $categoryInputFilter = $parentLocator->get('category_input_filter');
         $appConfig = $parentLocator->get('config');
+        $contactTable = $parentLocator->get('contact_table');
 
         return new CategoryController(
             $categoryTable, 
             $categoryInputFilter,
-            $appConfig
+            $appConfig,
+            $contactTable
         );
     }
 }

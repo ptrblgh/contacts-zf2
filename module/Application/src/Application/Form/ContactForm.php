@@ -31,7 +31,7 @@ class ContactForm extends Form
             'options' => array(
                 'label' => 'Név',
                 'label_attributes' => array(
-                    'for' => 'name',
+                    'for' => 'contact_name',
                     'class' => 'control-label full-width'
                 ),
             ),
@@ -46,7 +46,7 @@ class ContactForm extends Form
             'options' => array(
                 'label' => 'E-mail',
                 'label_attributes' => array(
-                    'for' => 'email',
+                    'for' => 'contact_email',
                     'class' => 'control-label full-width'
                 ),
             ),
@@ -62,7 +62,7 @@ class ContactForm extends Form
                 'label' 
                     => 'Mobil (36xxyyyyyyy, xx értékei lehetnek: 20, 30, 31, 70)',
                 'label_attributes' => array(
-                    'for' => 'email',
+                    'for' => 'contact_cell',
                     'class' => 'control-label full-width'
                 ),
             ),
@@ -80,6 +80,7 @@ class ContactForm extends Form
                     'for' => 'categories',
                     'class' => 'control-label full-width'
                 ),
+                'disable_inarray_validator' => true,
             ),
             'attributes' => array(
                 'class' => 'form-control js-example-responsive select2',

@@ -20,7 +20,7 @@ $url_order = $order == 'ASC' ? 'DESC' : 'ASC';
         </th> 
         <th><?php echo $this->translate('Művelet'); ?></th>
     </tr>
-    <?php if (!empty($paginator)) : ?>
+    <?php if (count($paginator) > 0) : ?>
     <?php foreach ($paginator as $category) : ?>
         <tr>
             <td><strong><?php echo $this->escapeHtml($category->category_name);?></strong></td>

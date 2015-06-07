@@ -82,13 +82,12 @@ class ContactInputFilter implements InputFilterAwareInterface
                 'filters' => array(
                     array('name' => 'StringTrim'),
                     array('name' => 'StripTags'),
-                    array('name' => 'Alnum'),
                     array(
-                        'name' => 'StringToLower',
+                        'name' => 'Alnum',
                         'options' => array(
-                            'encoding' => 'UTF-8'
-                        )
-                    )
+                            'allowWhiteSpace' => true,
+                        ),
+                    ),
                 ),
                 'validators' => array(
                     array(
@@ -154,9 +153,6 @@ class ContactInputFilter implements InputFilterAwareInterface
             $inputFilter->add(array(
                 'name' => 'categories',
                 'required' => true,
-                'validators' => array(
-                    array('name' => 'NotEmpty')
-                )
             ));
 
             $this->inputFilter = $inputFilter;

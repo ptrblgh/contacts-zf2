@@ -45,11 +45,11 @@ $formLabelAttributes = array('class' => 'control-label full-width');
     <div class="form-group col-sm-offset-3 col-sm-6">
         <?php
         $categories = $form->get('categories');
-        // $categories->setValueOptions($categoryValues);
-        // $categories->setAttributes(array(
-        //             'value' => $defaultCategoryValues,
-        //             'selected' => true
-        //         ));
+        $categories->setValueOptions($categoryValues);
+        $categories->setAttributes(array(
+                    'value' => $defaultCategoryValues,
+                    'selected' => true
+                ));
         echo $formLabel($categories);
         echo $this->formSelect($categories);
         echo $this->formElementErrors($categories);

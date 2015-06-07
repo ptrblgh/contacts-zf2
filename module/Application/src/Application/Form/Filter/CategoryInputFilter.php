@@ -82,13 +82,12 @@ class CategoryInputFilter implements InputFilterAwareInterface
                 'filters' => array(
                     array('name' => 'StringTrim'),
                     array('name' => 'StripTags'),
-                    array('name' => 'Alnum'),
                     array(
-                        'name' => 'StringToLower',
+                        'name' => 'Alnum',
                         'options' => array(
-                            'encoding' => 'UTF-8'
-                        )
-                    )
+                            'allowWhiteSpace' => true,
+                        ),
+                    ),
                 ),
                 'validators' => array(
                     array(

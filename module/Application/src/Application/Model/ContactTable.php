@@ -55,7 +55,7 @@ class ContactTable extends AbstractTableGateway
     public function fetchAll($params)
     {
         $expression = 'IFNULL(GROUP_CONCAT(category.category_name ORDER BY '
-            . 'category.category_name ASC SEPARATOR \', \'), \'Besorolatlan\')';
+            . 'category.category_name ASC SEPARATOR \', \'), \'\')';
 
         $sql = new Sql($this->adapter);
         $select = $sql->select();
@@ -147,7 +147,7 @@ class ContactTable extends AbstractTableGateway
         $id = (int) $id;
 
         $contact = $this->select(array('id' => $id));
-        if (!$contact) {
+        if ($contact->count() == 0) {
             $msg = "A cím nem létezik.";
             throw new \Exception($msg);
         }
@@ -164,5 +164,92 @@ class ContactTable extends AbstractTableGateway
     public function deleteContact($id)
     {
         $this->delete(array('id' => (int) $id));
+    }
+
+    /**
+     * Save contact categories into contact_category bridge table
+     * 
+     * @param  array $data
+     * @return void
+     */
+    public function saveContactCategories($data)
+    {
+        $contactId = ($data->id) 
+            ? $data->id 
+            : $this->adapter->getDriver()->getLastGeneratedValue()
+        ;
+        if (!empty($data->categories)) {
+            foreach ($data->categories as $categoryId) {
+                $categoryId = (int) $categoryId;
+                if ($contactId && $categoryId) {
+                    $valuesArr[] = '(' . $contactId . ',' . $categoryId . ')';
+                }
+            }
+
+            $values = implode(',', $valuesArr);
+            $sql = "INSERT INTO `contact_category` 
+                (`contact_id`, `category_id`) 
+                VALUES " . $values;
+            
+            $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        }
+    }
+
+    /**
+     * Save uncategorized contacts into "Besorolatlan" (id#1) category
+     * 
+     * @param  array $data
+     * @return void
+     */
+    public function saveUncategorizedContacts()
+    {
+        $expression = 'IFNULL(GROUP_CONCAT(contact_category.category_id ORDER BY '
+            . 'contact_category.category_id ASC SEPARATOR \', \'), \'\')';
+
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $rows = $select
+            ->columns(
+                array(
+                    'contact_id' => 'id',
+                    'contact_categories' => new Expression($expression)
+                )
+            )
+            ->from($this->table)
+            // join contact-category table to get categories' id for contacts
+            ->join(
+                array('contact_category' => 'contact_category'), 
+                'contact_category.contact_id = contact.id',
+                array(),
+                'LEFT'
+            )
+            ->where('contact_category.category_id IS NULL')
+            ->group('contact.id')
+        ;
+        //\Zend\Debug\Debug::dump($sql->getSqlStringForSqlObject($select));
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+
+        $resultSet = new ResultSet;
+        $resultSet->initialize($result);
+
+        if (!empty($resultSet)) {
+            foreach ($resultSet as $contact) {
+                $contactId = (int) $contact->contact_id;
+                if ($contactId) {
+                    $valuesArr[] = '(' . $contactId . ', 1)';
+                }
+            }
+
+            if (!empty($valuesArr)) {
+                $values = implode(',', $valuesArr);
+                $sql = "INSERT INTO `contact_category` 
+                    (`contact_id`, `category_id`) 
+                    VALUES " . $values;
+
+                $this->adapter->query($sql, Adapter::QUERY_MODE_EXECUTE);
+            }
+        }
+        
     }
 }

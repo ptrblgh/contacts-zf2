@@ -15,6 +15,7 @@ use Zend\View\Model\ViewModel;
 use Application\Model\Contact;
 use Application\Form\ContactForm;
 use Application\Form\Filter\ContactInputFilter;
+use Application\Model\CategoryTable;
 use Application\Model\ContactTable;
 
 /**
@@ -24,11 +25,6 @@ use Application\Model\ContactTable;
  */
 class ContactController extends AbstractActionController
 {
-    /**
-     * @var array
-     */
-    protected $appConfig;
-
     /**
      * @var ContactTable
      */
@@ -40,6 +36,16 @@ class ContactController extends AbstractActionController
     protected $contactInputFilter;
 
     /**
+     * @var array
+     */
+    protected $appConfig;
+
+    /**
+     * @var CategoryTable
+     */
+    protected $categoryTable;
+
+    /**
      * Controller constructor
      *
      * @param ContactTable $contactTable
@@ -47,11 +53,13 @@ class ContactController extends AbstractActionController
     public function __construct(
         ContactTable $contactTable,
         ContactInputFilter $contactInputFilter,
-        $appConfig
+        $appConfig,
+        CategoryTable $categoryTable
     ) {
         $this->contactTable = $contactTable;
         $this->contactInputFilter = $contactInputFilter;
         $this->appConfig = $appConfig;
+        $this->categoryTable = $categoryTable;
     }
 
     /**
@@ -116,17 +124,22 @@ class ContactController extends AbstractActionController
             if ($form->isValid()) {
                 $contact->exchangeArray($form->getData());
                 $this->contactTable->saveContact($contact);
-                //$this->categoryTable->saveCategories($request->getPost());
+                $this->contactTable->saveContactCategories($request->getPost());
                 
                 $this->redirect()->toRoute('contact');
             }
         }
 
-        //$categoryValues = $this->categoryTable->fetchAllForSelect();
+        $params = array(
+            'order_by' => 'category_name',
+            'order' => 'ASC',
+            'forSelect' => true
+        );
+        $categoryValues = $this->categoryTable->fetchAll($params);
 
         return array(
             'form' => $form, 
-            //'categoryValues' => $categoryValues,
+            'categoryValues' => $categoryValues,
         );
     }
 
@@ -142,7 +155,7 @@ class ContactController extends AbstractActionController
         try {
             $contact = $this->contactTable->getContact($id);
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            $this->redirect()->toRoute('contact');
         }
 
         $form = new ContactForm();
@@ -163,22 +176,27 @@ class ContactController extends AbstractActionController
 
             if ($form->isValid()) {
                 $this->contactTable->saveContact($contact);
-                //$this->categoryTable->deleteCategories($contact->id);
-                //$this->categoryTable->saveCategories($request->getPost());
+                $this->categoryTable->deleteContactCategories($contact->id);
+                $this->contactTable->saveContactCategories($request->getPost());
                 
                 $this->redirect()->toRoute('contact');
             }
         }
 
-        // $categoryValues = $this->categoryTable->fetchAllForSelect();
-        // $defaultCategoryValues 
-        //     = $this->categoryTable->findCategoriesByContact($id);
+        $params = array(
+            'order_by' => 'category_name',
+            'order' => 'ASC',
+            'forSelect' => true
+        );
+        $categoryValues = $this->categoryTable->fetchAll($params);
+        $defaultCategoryValues 
+            = $this->categoryTable->findCategoriesByContact($id);
 
         return array(
             'form' => $form, 
             'id' => $id,
-            //'categoryValues' => $categoryValues,
-            //'defaultCategoryValues' => $defaultCategoryValues,
+            'categoryValues' => $categoryValues,
+            'defaultCategoryValues' => $defaultCategoryValues,
         );
     }
 
