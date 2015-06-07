@@ -56,7 +56,11 @@ return array(
                 => 'Application\Factory\CategoryTableFactory',
             'category_input_filter'
                 => 'Application\Factory\CategoryInputFilterFactory',
-        ),        
+        ),
+        'invokables' => array(
+            'Utf8ResponseListener'
+                => 'Application\Listener\Utf8ResponseListener',
+        ),      
         'aliases' => array(
             'translator' => 'MvcTranslator',
         ),

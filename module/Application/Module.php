@@ -17,8 +17,14 @@ class Module
     public function onBootstrap(MvcEvent $e)
     {
         $eventManager        = $e->getApplication()->getEventManager();
+        $sharedManager       = $eventManager->getSharedManager();
+        $serviceManager      = $e->getApplication()->getServiceManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+        // set response header charset to utf-8
+        $utf8ResponseListener = $serviceManager->get('Utf8ResponseListener');
+        $eventManager->attach($utf8ResponseListener);
     }
 
     public function getConfig()
