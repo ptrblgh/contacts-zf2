@@ -74,12 +74,12 @@ class CategoryController extends AbstractActionController
             'order' => $order
         );
 
-        $categorys = $this->categoryTable->fetchAll($params);
+        $categories = $this->categoryTable->fetchAll($params);
 
         $itemsPerPage = $this->appConfig['items_per_page'];
 
-        $categorys->current();
-        $paginator = new Paginator(new paginatorIterator($categorys));
+        $categories->current();
+        $paginator = new Paginator(new paginatorIterator($categories));
         $paginator->setCurrentPageNumber($page)
             ->setItemCountPerPage($itemsPerPage)
             ->setPageRange(5);
