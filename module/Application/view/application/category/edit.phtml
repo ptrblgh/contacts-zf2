@@ -1,0 +1,33 @@
+<?php
+$form = $this->form;
+$form->prepare();
+$form->get('add')->setLabel('Változások mentése');
+$form->setAttribute('action', $this->url('contact', array('action' => 'edit', 'id' => $this->id)));
+$form->setAttribute('method', 'post');
+$form->setAttribute('id', 'contact-edit');
+$form->setAttribute('class', 'clearfix');
+$form->setAttribute('role', 'form');
+$formLabel = $this->plugin('formLabel');
+$formLabelAttributes = array('class' => 'control-label full-width');
+?>
+
+<h1 class="page-header text-center"><?php echo $this->escapeHtml('Kategória módosítása'); ?></h1>
+
+<?php echo $this->form()->openTag($form); ?>
+    <?php
+    $id = $form->get('id');
+    echo $this->formInput($id);
+    ?>
+    <div class="form-group col-sm-offset-3 col-sm-6">
+        <?php
+        $contact_name = $form->get('contact_name');
+        echo $formLabel($contact_name);
+        echo $this->formInput($contact_name);
+        echo $this->formElementErrors($contact_name);
+        ?>
+    </div>
+    <?php echo $this->formInput($form->get('security')) ?>
+    <div class="form-group col-sm-offset-3 col-sm-6 text-center">
+        <?php echo $this->formButton($form->get('add')) ?>
+    </div>
+<?php echo $this->form()->closeTag($form); ?>

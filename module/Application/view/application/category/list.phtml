@@ -1,0 +1,44 @@
+<?php
+
+$url_order = $order == 'ASC' ? 'DESC' : 'ASC';
+
+?>
+<h1 class="page-header text-center"><?php echo $this->escapeHtml('Címlista'); ?></h1>
+
+<div class="table-responsive">
+<table class="table table-striped">
+    <tr>
+        <th>
+            <a href="<?php echo $this->url('category', array('order_by' => 'category_name', 'order' => $url_order)); ?>"><?php echo $this->translate('Név'); ?> 
+                <?php if ($order_by == 'category_name'): ?><small class="pull-right"><span class="glyphicon glyphicon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></span></small><?php endif; ?>
+            </a>
+        </th>
+        <th>
+            <a href="<?php echo $this->url('category', array('order_by' => 'category_add_date', 'order' => $url_order)); ?>"><?php echo $this->translate('Felvéve'); ?> 
+                <?php if ($order_by == 'category_add_date'): ?><small class="pull-right"><span class="glyphicon glyphicon-chevron-<?php echo $url_order == 'ASC' ? 'down' : 'up' ?>"></span></small><?php endif; ?>
+            </a>
+        </th> 
+        <th><?php echo $this->translate('Művelet'); ?></th>
+    </tr>
+    <?php if (!empty($paginator)) : ?>
+    <?php foreach ($paginator as $category) : ?>
+        <tr>
+            <td><strong><?php echo $this->escapeHtml($category->category_name);?></strong></td>
+            <td><?php echo $this->escapeHtml($category->category_add_date);?></td>
+            <td class="col-other">
+                <div class="btn-group" action="group" aria-label="...">
+                    <a href="<?php echo $this->url('category', array('action' => 'edit', 'id' => $category->category_id)); ?>" action="button" class="btn btn-default btn-sm"><span class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></span></a>
+                    <a href="<?php echo $this->url('category', array('action' => 'del', 'id' => $category->category_id)); ?>" action="button" class="btn btn-default btn-sm confirm-del"><span class="fa fa-trash-o fa-lg"></span></a>
+                </div>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    <?php else : ?>
+        <tr>
+            <td colspan="6" class="text-center">Jelenleg nincsenek kategóriák.</td>
+        </tr>
+    <?php endif; ?>
+</table>
+</div>
+
+<?php echo $this->paginationControl($paginator, 'sliding', 'partial/paginator', array('order_by' => $order_by, 'order' => $order)); ?>

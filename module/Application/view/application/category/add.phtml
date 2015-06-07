@@ -1,0 +1,28 @@
+<?php
+$form = $this->form;
+$form->prepare();
+$form->setAttribute('action', $this->url('category', array('action' => 'add')));
+$form->setAttribute('method', 'post');
+$form->setAttribute('id', 'category-add');
+$form->setAttribute('class', 'clearfix');
+$form->setAttribute('role', 'form');
+$formLabel = $this->plugin('formLabel');
+$formLabelAttributes = array('class' => 'control-label full-width');
+?>
+
+<h1 class="page-header text-center"><?php echo $this->escapeHtml('Új kategória'); ?></h1>
+
+<?php echo $this->form()->openTag($form); ?>
+    <div class="form-group col-sm-offset-3 col-sm-6">
+        <?php
+        $category_name = $form->get('category_name');
+        echo $formLabel($category_name);
+        echo $this->formInput($category_name);
+        echo $this->formElementErrors($category_name);
+        ?>
+    </div>
+    <?php echo $this->formInput($form->get('security')) ?>
+    <div class="form-group col-sm-offset-3 col-sm-6 text-center">
+        <?php echo $this->formButton($form->get('add')) ?>
+    </div>
+<?php echo $this->form()->closeTag($form); ?>
