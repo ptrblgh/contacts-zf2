@@ -26,6 +26,8 @@ return array(
         'factories' => array(
             'contact_table'
                 => 'Application\Factory\ContactTableFactory',
+            'contact_input_filter'
+                => 'Application\Factory\ContactInputFilterFactory',
         ),        
         'aliases' => array(
             'translator' => 'MvcTranslator',

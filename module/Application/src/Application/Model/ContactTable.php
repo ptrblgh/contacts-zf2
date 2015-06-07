@@ -96,4 +96,64 @@ class ContactTable extends AbstractTableGateway
 
         return $resultSet;
     }
+
+    /**
+     * Save contact
+     * 
+     * @param Contact $contact
+     * @return void|\Exception
+     */
+    public function saveContact($contact)
+    {
+        $data = array(
+            'contact_name' => $contact->contact_name,
+            'contact_email' => $contact->contact_email,
+            'contact_cell' => $contact->contact_cell,
+        );
+
+        $id = (int) $contact->id;
+
+        if ($id == 0) {
+            $this->insert($data);
+        } else {
+            $row = $this->getContact($id);
+            if ($row) {
+                $this->update($data, array('id' => $id));
+            } else {
+                $msg = "A cím nem létezik.";
+                throw new \Exception($msg);
+            }
+        }
+    }
+
+    /**
+     * Get contact
+     * 
+     * @param int $contactId
+     * @throws \Exception if contact doesn't exist
+     * @return ResultSet
+     */
+    public function getContact($id)
+    {
+        $id = (int) $id;
+
+        $contact = $this->select(array('id' => $id));
+        if (!$contact) {
+            $msg = "A cím nem létezik.";
+            throw new \Exception($msg);
+        }
+
+        return $contact->current();
+    }
+
+    /**
+     * Delete contact
+     * 
+     * @param int $id
+     * @return void
+     */
+    public function deleteContact($id)
+    {
+        $this->delete(array('id' => (int) $id));
+    }
 }
