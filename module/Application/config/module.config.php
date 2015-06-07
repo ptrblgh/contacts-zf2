@@ -24,6 +24,26 @@ return array(
                     ),
                 ),
             ),
+            'category' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' 
+                        => '/category[/:action][/:id][/page/:page]'
+                            . '[/order_by/:order_by][/:order]',
+                    'constraints' => array(
+                        'action' => '(?!\bpage\b)(?!\border_by\b)'
+                            . '[a-zA-Z][a-zA-Z-]*',
+                        'id' => '[0-9]+',
+                        'page' => '[0-9]+',
+                        'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'order' => 'ASC|DESC'
+                    ),
+                    'defaults' => array(
+                        'controller' => 'category_controller',
+                        'action' => 'list'
+                    ),
+                ),
+            ),
         ),
     ),
     'service_manager' => array(
@@ -32,6 +52,10 @@ return array(
                 => 'Application\Factory\ContactTableFactory',
             'contact_input_filter'
                 => 'Application\Factory\ContactInputFilterFactory',
+            'category_table'
+                => 'Application\Factory\CategoryTableFactory',
+            'category_input_filter'
+                => 'Application\Factory\CategoryInputFilterFactory',
         ),        
         'aliases' => array(
             'translator' => 'MvcTranslator',
@@ -51,6 +75,8 @@ return array(
         'factories' => array(
             'contact_controller' 
                 => 'Application\Factory\ContactControllerFactory',
+            'category_controller' 
+                => 'Application\Factory\CategoryControllerFactory',
         ),
     ),
     'view_manager' => array(
