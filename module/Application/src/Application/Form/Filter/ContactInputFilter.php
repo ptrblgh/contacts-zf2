@@ -96,6 +96,7 @@ class ContactInputFilter implements InputFilterAwareInterface
                             'encoding' => 'utf-8',
                             'min' => 3,
                             'max' => 100,
+                            'message' => 'A név hossza nem megfelelő'
                         ),
                     ),
                     array(
@@ -107,7 +108,8 @@ class ContactInputFilter implements InputFilterAwareInterface
                             'exclude' => array(
                                 'field' => 'id',
                                 'value' => $contactId
-                            )
+                            ),
+                            'message' => 'Ez a cím már létezik'
                         )
                     )
                 ),
@@ -127,6 +129,7 @@ class ContactInputFilter implements InputFilterAwareInterface
                             'encoding' => 'utf-8',
                             'min' => 5,
                             'max' => 255,
+                            'message' => 'A hossz nem megfelelő'
                         ),
                     ),
                 ),
@@ -146,6 +149,7 @@ class ContactInputFilter implements InputFilterAwareInterface
                             'pattern' 
                                 => '/^(36)(20|30|31|70){1}([1-9]{1})([0-9]{6})$/'
                         ),
+                        'message' => 'Nem megfelelő formátum'
                     ),
                 ),
             ));

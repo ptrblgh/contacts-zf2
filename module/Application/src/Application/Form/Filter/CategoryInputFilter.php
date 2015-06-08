@@ -96,6 +96,7 @@ class CategoryInputFilter implements InputFilterAwareInterface
                             'encoding' => 'utf-8',
                             'min' => 3,
                             'max' => 100,
+                            'message' => 'A kategória nevének hossza nem megfelelő'
                         ),
                     ),
                     array(
@@ -107,7 +108,8 @@ class CategoryInputFilter implements InputFilterAwareInterface
                             'exclude' => array(
                                 'field' => 'id',
                                 'value' => $categoryId
-                            )
+                            ),
+                            'message' => 'Ez a kategória már létezik'
                         )
                     )
                 ),
