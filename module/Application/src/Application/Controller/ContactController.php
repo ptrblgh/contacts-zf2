@@ -209,7 +209,7 @@ class ContactController extends AbstractActionController
     {
         $id = (int) $this->params()->fromRoute('id', 0);
         $this->contactTable->deleteContact($id);
-        //$this->roleTable->deleteContactCategories($id);
+        $this->categoryTable->deleteContactCategories($id);
 
         $this->redirect()->toRoute('contact');
     }

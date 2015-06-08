@@ -1,4 +1,10 @@
 <?php
+/**
+ * Application module
+ * 
+ * @package Application
+ * @author Péter Balogh <peter.balogh@theory9.hu>
+ */
 
 namespace Application\Listener;
 

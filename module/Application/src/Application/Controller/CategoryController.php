@@ -100,7 +100,7 @@ class CategoryController extends AbstractActionController
     }
 
     /**
-     * Add category with categories
+     * Add category
      * 
      * @return ViewModel|\Zend\Http\Response
      */

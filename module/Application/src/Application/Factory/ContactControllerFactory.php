@@ -13,7 +13,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Application\Controller\ContactController;
 
 /**
- * Factory for instantiating {@see Application\Controller\ContactActionController}
+ * Factory for instantiating {@see Application\Controller\ContactController}
  */
 class ContactControllerFactory implements FactoryInterface
 {

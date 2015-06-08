@@ -15,7 +15,7 @@ use Zend\Db\Adapter\Adapter;
 use Application\Model\ContactTable;
 
 /**
- * Validatotion rules for contacts
+ * Validatotion rules for contact
  */
 class ContactInputFilter implements InputFilterAwareInterface
 {
@@ -35,7 +35,7 @@ class ContactInputFilter implements InputFilterAwareInterface
     protected $inputFilter;
 
     /**
-     * InputFilter Constructor
+     * InputFilter constructor
      * 
      * @param Adapter $dbAdapter 
      * @param ContactTable $contactTable

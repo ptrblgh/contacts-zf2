@@ -12,7 +12,7 @@ use Zend\Form\Form;
 use Zend\Form\Element;
 
 /**
- * Form elements for contacts
+ * Form elements for contact
  */
 class ContactForm extends Form
 {

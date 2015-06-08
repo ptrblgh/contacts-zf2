@@ -35,7 +35,7 @@ class CategoryInputFilter implements InputFilterAwareInterface
     protected $inputFilter;
 
     /**
-     * InputFilter Constructor
+     * InputFilter constructor
      * 
      * @param Adapter $dbAdapter 
      * @param CategoryTable $categoryTable
