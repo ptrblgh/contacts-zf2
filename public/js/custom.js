@@ -38,9 +38,14 @@ $(document).ready( function() {
                 $icon.addClass(options.icon.required).show();
             }
         })
+        .on('err.field.fv', function(e, data) {
+            data.fv.disableSubmitButtons(false);
+        })
+        .on('success.field.fv', function(e, data) {
+            data.fv.disableSubmitButtons(false);
+        })
         .find('[name="categories[]"]')
             .select2()
-            // Revalidate the color when it is changed
             .change(function(e) {
                 $('#contact-add, #contact-edit')
                     .formValidation('revalidateField', 'categories[]');
