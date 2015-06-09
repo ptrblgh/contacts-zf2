@@ -32,8 +32,9 @@ class Utf8ResponseListener implements ListenerAggregateInterface
     public function attach(EventManagerInterface $events)
     {
         $this->listeners[] = $events->attach(
-            MvcEvent::EVENT_DISPATCH, 
-            array($this, 'onDispatch')
+            MvcEvent::EVENT_RENDER, 
+            array($this, 'onRender'),
+            100
         );
     }
     
@@ -57,7 +58,7 @@ class Utf8ResponseListener implements ListenerAggregateInterface
      * @param  MvcEvent $event
      * @return void
      */    
-    public function onDispatch(MvcEvent $event)
+    public function onRender(MvcEvent $event)
     {
         $response = $event->getResponse();
         if ($response instanceof \Zend\Http\Response) {
