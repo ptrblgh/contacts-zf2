@@ -83,7 +83,7 @@ $(document).ready( function() {
                 contact_cell: {
                     validators: {
                         regexp: {
-                            regexp: /^(36)(20|30|31|70){1}([1-9]{1})([0-9]{6}\s)$/
+                            regexp: /^(36)(20|30|31|70){1}([1-9]{1})([0-9]{6})$/
                         }
                     }
                 },
